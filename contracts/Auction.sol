@@ -30,7 +30,10 @@ contract Auction {
 
         // TODO If the bid is not higher than highestBid, send the
         // money back. Use "require"
-        
+        require(
+            msg.value > highestBid,
+            "There already is a higher bid."
+        );
         // TODO update state
 
         // TODO store the previously highest bid in pendingReturns. That bidder
