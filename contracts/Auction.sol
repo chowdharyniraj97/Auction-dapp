@@ -55,8 +55,10 @@ contract Auction {
     /// End the auction and send the highest bid
     /// to the beneficiary.
     function auctionEnd() public {
-        // TODO make sure that only the beneficiary can trigger this function. Use "require"
+         require(beneficiary==msg.sender); 
+         require(flag==true);
 
-        // TODO send money to the beneficiary account. Make sure that it can't call this auctionEnd() multiple times to drain money
+         flag=false;
+         beneficiary.send(highestBid);
     }
 }
