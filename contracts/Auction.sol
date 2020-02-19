@@ -11,8 +11,10 @@ contract Auction {
     mapping(address => uint) pendingReturns;
 
     // Constructor
+    bool flag;
     constructor() public {
         beneficiary = msg.sender;
+        flag=true; 
     }
 
     /// Bid on the auction with the value sent
@@ -24,15 +26,18 @@ contract Auction {
 
         // TODO If the bid is not higher than highestBid, send the
         // money back. Use "require"
-        
+        require(msg.value > highestBid)
         // TODO update state
-
+        uint old_bid=highestBid;
+        address old_add=highestBidder;
+        highestBid=msg.value;
+        highestBidder=msg.sender;
         // TODO store the previously highest bid in pendingReturns. That bidder
         // will need to trigger withdraw() to get the money back.
         // For example, A bids 5 ETH. Then, B bids 6 ETH and becomes the highest bidder. 
         // Store A and 5 ETH in pendingReturns. 
         // A will need to trigger withdraw() later to get that 5 ETH back.
-
+        pendingReturns[old_add]=old_bid;
         // Sending back the money by simply using
         // highestBidder.send(highestBid) is a security risk
         // because it could execute an untrusted contract.
@@ -43,7 +48,7 @@ contract Auction {
 
     /// Withdraw a bid that was overbid.
     function withdraw() public returns (bool) {
-
+        return  ans= msg.sender.send(pendingReturns[msg.sender]);
         // TODO send back the amount in pendingReturns to the sender. Try to avoid the reentrancy attack. Return false if there is an error when sending
     }
 
