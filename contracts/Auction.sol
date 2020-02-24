@@ -49,8 +49,15 @@ contract Auction {
 
     /// Withdraw a bid that was overbid.
     function withdraw() public returns (bool) {
+        require(pendingReturns[msg.sender]>0);
+        uint bal=pendingReturns[msg.sender];
         bool  ans= msg.sender.send(pendingReturns[msg.sender]);
         pendingReturns[msg.sender]=0;
+
+        if(!ans){
+            pendingReturns[msg.sender]=bal;
+        }
+
         return ans;
         // TODO send back the amount in pendingReturns to the sender. Try to avoid the reentrancy attack. Return false if there is an error when sending
     }
@@ -62,6 +69,6 @@ contract Auction {
          require(flag==true);
 
          flag=false;
-         beneficiary.send(highestBid);
+         beneficiary.transfer(highestBid);
     }
 }
